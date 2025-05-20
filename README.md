@@ -71,7 +71,6 @@ Supporta l'analisi dei seguenti linguaggi e framework:
 
 2. Assicurati che l'App Password di Bitbucket abbia i seguenti permessi:
    - Repository Read
-   - Repository Write
 
 ## Utilizzo
 
