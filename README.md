@@ -9,6 +9,17 @@ Questo strumento genera Software Bill of Materials (SBOM) per i repository Bitbu
 - Generazione opzionale di file NOTICE.txt
 - Supporto per vari linguaggi di programmazione e framework
 - Integrazione con Docker per una facile distribuzione
+- Formattazione automatica dei file JSON per una migliore leggibilità
+- Esecuzione in container Docker per isolamento e portabilità
+
+## Perché CycloneDX?
+
+CycloneDX è stato scelto come formato SBOM per diversi motivi:
+- È uno standard OWASP riconosciuto
+- Supporta un'ampia gamma di linguaggi e package manager
+- Fornisce un formato JSON ben strutturato e facilmente processabile
+- Include informazioni dettagliate su licenze e vulnerabilità
+- È supportato da molti strumenti di sicurezza e compliance
 
 ## Linguaggi e Framework Supportati
 
@@ -44,7 +55,7 @@ Lo strumento supporta l'analisi dei seguenti linguaggi e framework:
 
 ## Requisiti
 
-- Docker
+- Docker e Docker Compose
 - Accesso a Bitbucket con App Password
 - Workspace Bitbucket configurato
 
@@ -64,6 +75,8 @@ Lo strumento supporta l'analisi dei seguenti linguaggi e framework:
 
 ## Utilizzo
 
+### Con Docker (Raccomandato)
+
 1. Costruisci l'immagine Docker:
    ```bash
    docker compose build
@@ -72,6 +85,31 @@ Lo strumento supporta l'analisi dei seguenti linguaggi e framework:
 2. Esegui il generatore:
    ```bash
    docker compose run --rm sbom-generator
+   ```
+
+### Con Python (Sviluppo)
+
+1. Crea un ambiente virtuale:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Linux/Mac
+   # oppure
+   .\venv\Scripts\activate  # Windows
+   ```
+
+2. Installa le dipendenze:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Installa Syft:
+   ```bash
+   curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+   ```
+
+4. Esegui lo script:
+   ```bash
+   python bitbucket_sbom_generator.py
    ```
 
 ## Output
@@ -92,6 +130,51 @@ Il file SBOM generato segue il formato CycloneDX JSON e include:
 - Informazioni di versione
 - PURL (Package URL) per ogni componente
 
+### Esempio di struttura SBOM:
+```json
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2024-02-20T12:00:00Z",
+    "tools": [
+      {
+        "vendor": "Anchore",
+        "name": "Syft",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "package-name",
+      "version": "1.0.0",
+      "purl": "pkg:npm/package-name@1.0.0",
+      "licenses": [
+        {
+          "name": "MIT"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Spiegazione dei campi principali:
+- `bomFormat`: Indica il formato del file (CycloneDX)
+- `specVersion`: Versione della specifica CycloneDX utilizzata
+- `metadata`: Informazioni sulla generazione del SBOM
+  - `timestamp`: Data e ora di generazione
+  - `tools`: Strumenti utilizzati per la generazione
+- `components`: Lista dei componenti rilevati
+  - `type`: Tipo di componente (library, application, framework, etc.)
+  - `name`: Nome del componente
+  - `version`: Versione del componente
+  - `purl`: Package URL univoco del componente
+  - `licenses`: Informazioni sulle licenze
+
 ## Formato NOTICE
 
 Il file NOTICE generato include:
@@ -101,6 +184,29 @@ Il file NOTICE generato include:
 - Lista dei componenti di terze parti
 - Informazioni sulle licenze
 - Package URL per ogni componente
+
+### Esempio di struttura NOTICE:
+```
+NOTICE for repository-name
+================================================================================
+
+Generated on: 2024-02-20 12:00:00
+
+This file contains attributions and license information for third-party software used in this project.
+
+Third-party Components:
+--------------------------------------------------------------------------------
+
+License: MIT
+----------------------------------------
+- package-name 1.0.0
+  Source: pkg:npm/package-name@1.0.0
+
+License: Apache-2.0
+----------------------------------------
+- another-package 2.0.0
+  Source: pkg:npm/another-package@2.0.0
+```
 
 ## Variabili d'Ambiente
 
@@ -117,6 +223,9 @@ Il file NOTICE generato include:
 - I file SBOM e NOTICE vengono generati nella directory `output`
 - I file vengono nominati con timestamp per evitare sovrascritture
 - In caso di errore su un repository, lo script continua con il successivo
+- Il generatore rileva automaticamente i linguaggi principali nel repository e usa i cataloger Syft appropriati
+- Se non vengono rilevati linguaggi principali, viene eseguita un'analisi generica
+- I file JSON vengono formattati automaticamente per una migliore leggibilità
 
 ## Licenza
 
