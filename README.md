@@ -1,6 +1,6 @@
 # Bitbucket SBOM Generator
 
-Questo strumento genera Software Bill of Materials (SBOM) per i repository Bitbucket utilizzando Syft.
+Generazione di Software Bill of Materials (SBOM) e notice.txt per repository Bitbucket utilizzando Syft.
 
 ## Caratteristiche
 
@@ -23,7 +23,7 @@ CycloneDX è stato scelto come formato SBOM per diversi motivi:
 
 ## Linguaggi e Framework Supportati
 
-Lo strumento supporta l'analisi dei seguenti linguaggi e framework:
+Supporta l'analisi dei seguenti linguaggi e framework:
 
 ### JavaScript/TypeScript
 - Progetti JavaScript/TypeScript generici
@@ -115,7 +115,7 @@ Lo strumento supporta l'analisi dei seguenti linguaggi e framework:
 ## Output
 
 ### SBOM (CycloneDX JSON)
-Il file SBOM viene generato nella directory `output` con il nome `sbom_[repository_name]_[timestamp].json`.
+Se abilitato, il file SBOM viene generato nella directory `output` con il nome `sbom_[repository_name]_[timestamp].json`.
 
 ### NOTICE.txt
 Se abilitato, viene generato un file NOTICE.txt nella directory `output` con il nome `NOTICE_[repository_name]_[timestamp].txt`.
