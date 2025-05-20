@@ -1,51 +1,51 @@
 # Bitbucket SBOM Generator
 
-Generazione di Software Bill of Materials (SBOM) e notice.txt per repository Bitbucket utilizzando Syft.
+This tool generates Software Bill of Materials (SBOM) and NOTICE.txt for Bitbucket repositories using Syft.
 
-## Caratteristiche
+## Features
 
-- Analisi automatica di tutti i repository in un workspace Bitbucket
-- Generazione di SBOM in formato CycloneDX JSON
-- Generazione opzionale di file NOTICE.txt
-- Supporto per vari linguaggi di programmazione e framework
-- Integrazione con Docker per una facile distribuzione
-- Formattazione automatica dei file JSON per una migliore leggibilità
-- Esecuzione in container Docker per isolamento e portabilità
+- Automatic analysis of all repositories in a Bitbucket workspace
+- SBOM generation in CycloneDX JSON format
+- Optional NOTICE.txt file generation
+- Support for various programming languages and frameworks
+- Docker integration for easy distribution
+- Automatic JSON file formatting for better readability
+- Containerized execution for isolation and portability
 
-## Perché CycloneDX?
+## Why CycloneDX?
 
-CycloneDX è stato scelto come formato SBOM per diversi motivi:
-- È uno standard OWASP riconosciuto
-- Supporta un'ampia gamma di linguaggi e package manager
-- Fornisce un formato JSON ben strutturato e facilmente processabile
-- Include informazioni dettagliate su licenze e vulnerabilità
-- È supportato da molti strumenti di sicurezza e compliance
+CycloneDX was chosen as the SBOM format for several reasons:
+- It's a recognized OWASP standard
+- Supports a wide range of languages and package managers
+- Provides a well-structured and easily processable JSON format
+- Includes detailed information about licenses and vulnerabilities
+- Is supported by many security and compliance tools
 
-## Linguaggi e Framework Supportati
+## Supported Languages and Frameworks
 
-Supporta l'analisi dei seguenti linguaggi e framework:
+The tool supports analysis of the following languages and frameworks:
 
 ### JavaScript/TypeScript
-- Progetti JavaScript/TypeScript generici
-- Framework supportati:
-  - Angular (rilevato da angular.json)
-  - React (rilevato da package.json o presenza di react/react-dom)
-  - Vue.js (rilevato da vue.config.js, file .vue o package.json)
-- Package Manager supportati:
+- Generic JavaScript/TypeScript projects
+- Supported frameworks:
+  - Angular (detected from angular.json)
+  - React (detected from package.json or presence of react/react-dom)
+  - Vue.js (detected from vue.config.js, .vue files or package.json)
+- Supported package managers:
   - npm (package.json)
   - Yarn (yarn.lock)
   - pnpm (pnpm-lock.yaml)
 
 ### C/C++
-- Progetti C/C++ generici
-- Build system supportati:
+- Generic C/C++ projects
+- Supported build systems:
   - CMake (CMakeLists.txt)
   - Make (Makefile)
-- File supportati:
-  - `.c`, `.cpp` (file sorgente)
-  - `.h`, `.hpp` (file header)
+- Supported files:
+  - `.c`, `.cpp` (source files)
+  - `.h`, `.hpp` (header files)
 
-### Altri Linguaggi
+### Other Languages
 - .NET (C#, F#, VB.NET)
 - Python
 - Java
@@ -53,15 +53,15 @@ Supporta l'analisi dei seguenti linguaggi e framework:
 - Go
 - PHP
 
-## Requisiti
+## Requirements
 
-- Docker e Docker Compose
-- Accesso a Bitbucket con App Password
-- Workspace Bitbucket configurato
+- Docker and Docker Compose
+- Bitbucket access with App Password
+- Configured Bitbucket workspace
 
-## Configurazione
+## Configuration
 
-1. Crea un file `.env` nella directory del progetto con le seguenti variabili:
+1. Create a `.env` file in the project directory with the following variables:
    ```
    BITBUCKET_USERNAME=your_username
    BITBUCKET_APP_PASSWORD=your_app_password
@@ -69,44 +69,44 @@ Supporta l'analisi dei seguenti linguaggi e framework:
    GENERATE_NOTICE=true|false|only
    ```
 
-2. Assicurati che l'App Password di Bitbucket abbia i seguenti permessi:
+2. Ensure your Bitbucket App Password has the following permissions:
    - Repository Read
 
-## Utilizzo
+## Usage
 
-### Con Docker (Raccomandato)
+### With Docker (Recommended)
 
-1. Costruisci l'immagine Docker:
+1. Build the Docker image:
    ```bash
    docker compose build
    ```
 
-2. Esegui il generatore:
+2. Run the generator:
    ```bash
    docker compose run --rm sbom-generator
    ```
 
-### Con Python (Sviluppo)
+### With Python (Development)
 
-1. Crea un ambiente virtuale:
+1. Create a virtual environment:
    ```bash
    python -m venv venv
    source venv/bin/activate  # Linux/Mac
-   # oppure
+   # or
    .\venv\Scripts\activate  # Windows
    ```
 
-2. Installa le dipendenze:
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Installa Syft:
+3. Install Syft:
    ```bash
    curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
    ```
 
-4. Esegui lo script:
+4. Run the script:
    ```bash
    python bitbucket_sbom_generator.py
    ```
@@ -114,22 +114,22 @@ Supporta l'analisi dei seguenti linguaggi e framework:
 ## Output
 
 ### SBOM (CycloneDX JSON)
-Se abilitato, il file SBOM viene generato nella directory `output` con il nome `sbom_[repository_name]_[timestamp].json`.
+The SBOM file is generated in the `output` directory with the name `sbom_[repository_name]_[timestamp].json`.
 
 ### NOTICE.txt
-Se abilitato, viene generato un file NOTICE.txt nella directory `output` con il nome `NOTICE_[repository_name]_[timestamp].txt`.
+If enabled, a NOTICE.txt file is generated in the `output` directory with the name `NOTICE_[repository_name]_[timestamp].txt`.
 
-## Formato SBOM
+## SBOM Format
 
-Il file SBOM generato segue il formato CycloneDX JSON e include:
+The generated SBOM file follows the CycloneDX JSON format and includes:
 
-- Metadati del repository
-- Componenti e dipendenze
-- Licenze
-- Informazioni di versione
-- PURL (Package URL) per ogni componente
+- Repository metadata
+- Components and dependencies
+- Licenses
+- Version information
+- PURL (Package URL) for each component
 
-### Esempio di struttura SBOM:
+### Example SBOM structure:
 ```json
 {
   "bomFormat": "CycloneDX",
@@ -161,30 +161,30 @@ Il file SBOM generato segue il formato CycloneDX JSON e include:
 }
 ```
 
-### Spiegazione dei campi principali:
-- `bomFormat`: Indica il formato del file (CycloneDX)
-- `specVersion`: Versione della specifica CycloneDX utilizzata
-- `metadata`: Informazioni sulla generazione del SBOM
-  - `timestamp`: Data e ora di generazione
-  - `tools`: Strumenti utilizzati per la generazione
-- `components`: Lista dei componenti rilevati
-  - `type`: Tipo di componente (library, application, framework, etc.)
-  - `name`: Nome del componente
-  - `version`: Versione del componente
-  - `purl`: Package URL univoco del componente
-  - `licenses`: Informazioni sulle licenze
+### Main fields explanation:
+- `bomFormat`: Indicates the file format (CycloneDX)
+- `specVersion`: CycloneDX specification version used
+- `metadata`: Information about SBOM generation
+  - `timestamp`: Generation date and time
+  - `tools`: Tools used for generation
+- `components`: List of detected components
+  - `type`: Component type (library, application, framework, etc.)
+  - `name`: Component name
+  - `version`: Component version
+  - `purl`: Unique Package URL for the component
+  - `licenses`: License information
 
-## Formato NOTICE
+## NOTICE Format
 
-Il file NOTICE generato include:
+The generated NOTICE file includes:
 
-- Data e ora di generazione
-- Nome del repository
-- Lista dei componenti di terze parti
-- Informazioni sulle licenze
-- Package URL per ogni componente
+- Generation date and time
+- Repository name
+- List of third-party components
+- License information
+- Package URL for each component
 
-### Esempio di struttura NOTICE:
+### Example NOTICE structure:
 ```
 NOTICE for repository-name
 ================================================================================
@@ -207,25 +207,25 @@ License: Apache-2.0
   Source: pkg:npm/another-package@2.0.0
 ```
 
-## Variabili d'Ambiente
+## Environment Variables
 
-- `BITBUCKET_USERNAME`: Username Bitbucket
-- `BITBUCKET_APP_PASSWORD`: App Password Bitbucket
-- `BITBUCKET_WORKSPACE`: Nome del workspace Bitbucket
-- `GENERATE_NOTICE`: Modalità di generazione del file NOTICE
-  - `true`: Genera sia SBOM che NOTICE
-  - `false`: Genera solo SBOM
-  - `only`: Genera solo NOTICE (richiede un SBOM esistente)
+- `BITBUCKET_USERNAME`: Bitbucket username
+- `BITBUCKET_APP_PASSWORD`: Bitbucket App Password
+- `BITBUCKET_WORKSPACE`: Bitbucket workspace name
+- `GENERATE_NOTICE`: NOTICE file generation mode
+  - `true`: Generate both SBOM and NOTICE
+  - `false`: Generate only SBOM
+  - `only`: Generate only NOTICE (requires existing SBOM)
 
-## Note
+## Notes
 
-- I file SBOM e NOTICE vengono generati nella directory `output`
-- I file vengono nominati con timestamp per evitare sovrascritture
-- In caso di errore su un repository, lo script continua con il successivo
-- Il generatore rileva automaticamente i linguaggi principali nel repository e usa i cataloger Syft appropriati
-- Se non vengono rilevati linguaggi principali, viene eseguita un'analisi generica
-- I file JSON vengono formattati automaticamente per una migliore leggibilità
+- SBOM and NOTICE files are generated in the `output` directory
+- Files are named with timestamps to avoid overwriting
+- If an error occurs on a repository, the script continues with the next one
+- The generator automatically detects main languages in the repository and uses appropriate Syft catalogers
+- If no main languages are detected, a generic analysis is performed
+- JSON files are automatically formatted for better readability
 
-## Licenza
+## License
 
 MIT 
